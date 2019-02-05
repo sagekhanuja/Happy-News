@@ -21,7 +21,7 @@ api = tweepy.API(auth, wait_on_rate_limit=True)
 
 
 
-
+#twitter bot class serves as an effective way to parse through several twitter accounts and retweet happy news!
 class TwitterBot:
 
     def __init__(self, news_twitterhandle): #news_twitterhandle is the @ name of the twitter entity
@@ -36,10 +36,12 @@ class TwitterBot:
         tweet_text = status._json['text']
         global clean_tweet
         global id
-        clean_tweet = str(' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t]) |(\w+:\/\/\S+)", " ", tweet_text).split()))
-        print(clean_tweet)
+        #parsing the tweets with regex expressions
+        #These expressions filter out '@' and links from tweets
+        clean_tweet = re.sub(r"(@[A-Za-z0-9]+)|([\t]) |(\w+:\/\/\S+)", " ", tweet_text)
+        processed_tweet = re.sub(r"http\S+", "", clean_tweet)
+        print(processed_tweet)
         id = int(status._json['id_str'])
-        print(clean_tweet)
         
 
     def sentiment_analysis(self):
@@ -78,6 +80,7 @@ def main():
     nytimes.retweet()
 
     #declaring the npr object and iterating through the functions in the retweet class
+    #repeating this for all the news sources we want
     
     washpost = TwitterBot("washingtonpost")
     washpost.find_user_history()
@@ -89,6 +92,26 @@ def main():
     BBC.find_user_history()
     BBC.sentiment_analysis()
     BBC.retweet()
+    
+    Reuters = TwitterBot("Reuters")
+    Reuters.find_user_history()
+    Reuters.sentiment_analysis()
+    Reuters.retweet()
+    
+    CNN = TwitterBot("CNN")
+    CNN.find_user_history()
+    CNN.sentiment_analysis()
+    CNN.retweet()
+    
+    Engadget = TwitterBot("engadget")
+    Engadget.find_user_history()
+    Engadget.sentiment_analysis()
+    Engadget.retweet()
+
+    TechCrunch = TwitterBot("TechCrunch")
+    TechCrunch.find_user_history()
+    TechCrunch.sentiment_analysis()
+    TechCrunch.retweet()
     
 starttime=time.time()
 
